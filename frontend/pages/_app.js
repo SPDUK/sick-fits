@@ -1,0 +1,18 @@
+import App, { Container } from 'next/app';
+import Page from '../components/Page';
+// Page is a component that wraps any page, such as meta tags, navbar etc.
+// Component is whichever page component we pass in
+class MyApp extends App {
+  render() {
+    const { Component } = this.props;
+    return (
+      <Container>
+        <Page>
+          <Component />
+        </Page>
+      </Container>
+    );
+  }
+}
+
+export default MyApp;
