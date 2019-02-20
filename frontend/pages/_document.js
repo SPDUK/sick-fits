@@ -1,5 +1,5 @@
 // lets us avoid the flash of unstyled content by grabbing the styles before
-//  rendering everything else, because we use styled-components this is needed
+//  rendering everything else, because we use style
 
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
