@@ -1,8 +1,20 @@
-# client facing types, queries, mutations
+# client facing types, queries, mutations, anything visible by API goes in schema
+# ! means we can't return null for any item (required)
+# [Something!]! means an array is required and it must have at least one Something inside it
+
+# if something should be the same in schema.graphql as what you have in prisma.graphql you can import it, here we use import to import the Item type
+
+# import * from './generated/prisma.graphql'
 type Mutation {
-  hi: String
+  createItem(
+    title: String
+    description: String
+    price: Int
+    image: String
+    largeImage: String
+  ): Item!
 }
 
 type Query {
-  hi: String
+  items: [Item]!
 }

@@ -1,5 +1,22 @@
+# after changing this data model you have to deploy to prisma! (npm run deploy)
+
+# data model for prisma and database
+#  @ is a directive
+# DateTime is available through prisma
 type User {
   id: ID! @unique
   name: String!
   email: String!
+}
+
+type Item {
+  id: ID! @unique
+  title: String!
+  description: String!
+  image: String
+  largeImage: String
+  price: Int!
+  # createdAt: DateTime!
+  # updatedAt: DateTime!
+  # user: User!
 }

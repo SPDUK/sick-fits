@@ -23,6 +23,7 @@ function createServer() {
     resolverValidationOptions: {
       requireResolversForResolveType: false,
     },
+    // gives us the request info (headers, cookies etc)
     // allowing access the database from the resolvers for every request
     context: req => ({ ...req, db }),
   });
