@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { randomBytes } = require('crypto');
+const { promisify } = require('util');
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -85,6 +87,57 @@ const Mutations = {
     // check if there is a current userId on the request
     ctx.response.clearCookie('token');
     return { message: 'You have been signed out!' };
+  },
+  async requestReset(parent, args, ctx, info) {
+    const user = await ctx.db.query.user({ where: { email: args.email } });
+    if (!user) throw new Error(`No such user found for email ${args.email}`);
+
+    // create a random string to use as the reset token and an expiry 1 hour from now
+    const randomBytesPromisified = promisify(randomBytes);
+    const resetToken = (await randomBytesPromisified(20)).toString('hex');
+    const resetTokenExpiry = Date.now() + 3600000;
+
+    // update user with the new resetToken and expiry
+    const res = await ctx.db.mutation.updateUser({
+      where: { email: args.email },
+      data: { resetToken, resetTokenExpiry },
+    });
+    return { message: 'Thanks!' };
+  },
+  async resetPassword(parent, args, ctx, info) {
+    if (args.password !== args.confirmPassword) {
+      throw new Error('Passwords do not match');
+    }
+
+    // query all users to find one with a valid resetToken and expiry
+    const [user] = await ctx.db.query.users({
+      where: {
+        resetToken: args.resetToken,
+        resetTokenExpiry_gte: Date.now() - 3600000,
+      },
+    });
+    if (!user) throw new Error('This reset token is either invalid or expired');
+
+    // hash the new password and update the user's password, remove the token and expiry
+    const password = await bcrypt.hash(args.password, 10);
+    const updatedUser = await ctx.db.mutation.updateUser({
+      where: {
+        email: user.email,
+      },
+      data: {
+        password,
+        resetToken: null,
+        resetTokenExpiry: null,
+      },
+    });
+    // create a new JWT and add it to cookies
+    const token = jwt.sign({ userId: updatedUser.id }, process.env.APP_SECRET);
+
+    ctx.response.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
+    });
+    return updatedUser;
   },
 };
 
