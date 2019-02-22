@@ -5,6 +5,10 @@
 # if something should be the same in schema.graphql as what you have in prisma.graphql you can import it, here we use import to import the Item type
 
 # import * from './generated/prisma.graphql'
+type SuccessMessage {
+  message: String
+}
+
 type Mutation {
   createItem(
     title: String
@@ -20,6 +24,7 @@ type Mutation {
 
   signUp(email: String!, password: String!, name: String!): User!
   signIn(email: String!, password: String!): User!
+  signOut: SuccessMessage
 }
 type Query {
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, first: Int): [Item]!

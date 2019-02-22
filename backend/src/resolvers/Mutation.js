@@ -81,6 +81,11 @@ const Mutations = {
     // 5. Return user
     return user;
   },
+  signOut(parent, args, ctx, info) {
+    // check if there is a current userId on the request
+    ctx.response.clearCookie('token');
+    return { message: 'You have been signed out!' };
+  },
 };
 
 module.exports = Mutations;

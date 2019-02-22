@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import NavStyles from './styles/NavStyles';
 import User from './User';
+import Signout from './Signout';
 
 // destructures data out of the response to User, then me out of the data
 const Nav = () => (
@@ -21,6 +22,7 @@ const Nav = () => (
             <Link href="/me">
               <a>Accounts</a>
             </Link>
+            <Signout />
           </>
         )}
         {!me && (
