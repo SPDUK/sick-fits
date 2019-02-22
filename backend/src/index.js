@@ -1,6 +1,7 @@
 // using cookies because they are sent with every request, localstorage is not
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: 'variables.env' });
+const jwt = require('jsonwebtoken');
 const createServer = require('./createServer');
 const db = require('./db');
 
@@ -8,6 +9,16 @@ const server = createServer();
 
 // use express middleware to handle cookies (JWT)
 server.express.use(cookieParser());
+// middleware to decode JWT and get the user ID
+server.express.use((req, res, next) => {
+  const { token } = req.cookies;
+  if (token) {
+    // put userId onto request for future requests
+    const { userId } = jwt.verify(token, process.env.APP_SECRET);
+    req.userId = userId;
+  }
+  next();
+});
 // TODO use express middleware to populate current user
 
 // uses CORS, can only hit endpoint from approved URLs (frontend server)
