@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import NavStyles from './styles/NavStyles';
+import User from './User';
 
+// destructures data out of the response to User, then me out of the data
 const Nav = () => (
   <NavStyles>
+    <User>
+      {({ data: { me } }) => {
+        if (me.name) return <p> {me.name}</p>;
+        return null;
+      }}
+    </User>
     <Link href="/items">
       <a>Shop</a>
     </Link>
