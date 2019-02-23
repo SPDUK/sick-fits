@@ -75,7 +75,7 @@ export default class Reset extends Component {
                 />
               </label>
               <label htmlFor="confirmPassword">
-                confirmPassword
+                Confirm Password
                 <input
                   type="password"
                   name="confirmPassword"
