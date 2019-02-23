@@ -11,6 +11,7 @@
 // if the query is the same in both prisma and in the query you can forward the query from yoga to prisma using forwardTo
 
 const { forwardTo } = require('prisma-binding');
+const { hasPermission } = require('../utils');
 
 const Query = {
   items: forwardTo('db'),
@@ -25,6 +26,15 @@ const Query = {
       },
       info
     );
+  },
+  async users(parent, args, ctx, info) {
+    // check if user has permissions to query all users
+    if (!ctx.request.userId) throw new Error('You must be logged in!');
+
+    // throw an error if they do not have the correct permissions
+    hasPermission(ctx.request.user, ['ADMIN', 'PERMISSIONUPDATE']);
+    // if they do, query all the users with an empty where to get all users.
+    return ctx.db.query.users({}, info);
   },
 };
 
