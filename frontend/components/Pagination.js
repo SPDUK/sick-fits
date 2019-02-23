@@ -39,7 +39,7 @@ export default function Pagination(props) {
               </a>
             </Link>
             <p>
-              Page {page} of {pages}
+              Page {page} of {pages || 1}
             </p>
             <p>{count} Items Total</p>
             <Link
