@@ -44,8 +44,11 @@ class CreateItem extends Component {
   };
 
   uploadFile = async e => {
-    this.setState({ formDisabled: true });
     const { files } = e.target;
+    // if no file is selected (hit back/cancel button, do nothing)
+    if (!files) return;
+
+    this.setState({ formDisabled: true });
     const data = new FormData();
     // first file the user added
     data.append('file', files[0]);
