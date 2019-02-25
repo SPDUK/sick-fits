@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
+import Item from './Item';
 import Pagination from './Pagination';
 import { perPage } from '../config';
 
-import Item from './Item';
-
 const ALL_ITEMS_QUERY = gql`
-  query ALL_ITEMS_QUERY($skip: Int = 0, $first: Int) {
+  query ALL_ITEMS_QUERY($skip: Int = 0, $first: Int = ${perPage}) {
     items(first: $first, skip: $skip, orderBy: createdAt_DESC) {
       id
       title
@@ -23,6 +22,7 @@ const ALL_ITEMS_QUERY = gql`
 const Center = styled.div`
   text-align: center;
 `;
+
 const ItemsList = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -39,7 +39,10 @@ class Items extends Component {
         <Pagination page={page} />
         <Query
           query={ALL_ITEMS_QUERY}
-          variables={{ skip: page * perPage - perPage, first: perPage }}
+          // fetchPolicy="network-only"
+          variables={{
+            skip: page * perPage - perPage,
+          }}
         >
           {({ data, error, loading }) => {
             if (loading) return <p>Loading...</p>;
@@ -47,7 +50,7 @@ class Items extends Component {
             return (
               <ItemsList>
                 {data.items.map(item => (
-                  <Item key={item.id} item={item} />
+                  <Item item={item} key={item.id} />
                 ))}
               </ItemsList>
             );
@@ -58,5 +61,6 @@ class Items extends Component {
     );
   }
 }
+
 export default Items;
 export { ALL_ITEMS_QUERY };
