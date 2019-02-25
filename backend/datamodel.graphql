@@ -21,6 +21,7 @@ type User {
   resetToken: String
   resetTokenExpiry: Float
   permissions: [Permission]
+  cart: [CartItem!]!
 }
 
 type Item {
@@ -31,4 +32,12 @@ type Item {
   largeImage: String
   price: Int!
   user: User!
+}
+
+# can't just add a normal item, must handle quantity they'd like to have
+type CartItem {
+  id: ID! @unique
+  quantity: Int! @default(value: 1)
+  item: Item! #relationship to Item
+  user: User! #relationship to User
 }
