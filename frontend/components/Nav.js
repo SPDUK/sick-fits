@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { Mutation } from 'react-apollo';
 import NavStyles from './styles/NavStyles';
 import User from './User';
 import Signout from './Signout';
+import { TOGGLE_CART_MUTATION } from './Cart';
 
 // destructures data out of the response to User, then me out of the data
 const Nav = () => (
@@ -23,6 +25,13 @@ const Nav = () => (
               <a>Accounts</a>
             </Link>
             <Signout />
+            <Mutation mutation={TOGGLE_CART_MUTATION}>
+              {toggleCart => (
+                <button type="button" onClick={toggleCart}>
+                  My Cart
+                </button>
+              )}
+            </Mutation>
           </>
         )}
         {!me && (
