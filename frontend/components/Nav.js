@@ -4,6 +4,7 @@ import NavStyles from './styles/NavStyles';
 import User from './User';
 import Signout from './Signout';
 import { TOGGLE_CART_MUTATION } from './Cart';
+import CartCount from './CartCount';
 
 // destructures data out of the response to User, then me out of the data
 const Nav = () => (
@@ -28,7 +29,12 @@ const Nav = () => (
             <Mutation mutation={TOGGLE_CART_MUTATION}>
               {toggleCart => (
                 <button type="button" onClick={toggleCart}>
-                  My Cart
+                  <CartCount
+                    count={me.cart.reduce(
+                      (tally, cartItem) => tally + cartItem.quantity,
+                      0
+                    )}
+                  />
                 </button>
               )}
             </Mutation>
