@@ -12,11 +12,12 @@ const REMOVE_FROM_CART_MUTATION = gql`
     }
   }
 `;
+
 const BigButton = styled.button`
   font-size: 3rem;
   background: none;
   border: 0;
-  &hover {
+  &:hover {
     color: ${props => props.theme.red};
     cursor: pointer;
   }
@@ -49,7 +50,7 @@ export default class RemoveFromCart extends Component {
           __typename: 'Mutation',
           removeFromCart: {
             __typename: 'CartItem',
-            id: this.props.id,
+            id,
           },
         }}
       >
