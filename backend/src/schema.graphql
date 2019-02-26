@@ -38,6 +38,7 @@ type Query {
   itemsConnection(where: ItemWhereInput): ItemConnection!
   me: User
   users: [User]!
+  order(id: ID!): Order
 }
 # don't potentially expose user passwords or reset token info
 type User {
